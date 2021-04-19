@@ -1,0 +1,1 @@
+export 'package:free_chat/src/controller/home_controller.dart';
