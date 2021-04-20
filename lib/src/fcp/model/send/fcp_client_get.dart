@@ -4,7 +4,7 @@ class FcpClientGet extends FcpMessage {
   FcpClientGet(String uri, {bool ignoreDs, bool dsOnly, String identifier,
                  int verbosity, int maxSize, int maxTempSize, int maxRetries,
                  int priorityClass, Persistence persistence, String clientToken,
-                 bool global, ReturnType returnType, bool binaryBlob, bool filterData,
+                 bool global, ReturnType returnType, bool binaryBlob, bool filterData, bool realTimeFlag
                  }) : super('ClientGet') {
     super.setField("URI", uri);
     super.setField("IgnoreDS", ignoreDs ?? false);
@@ -20,6 +20,7 @@ class FcpClientGet extends FcpMessage {
     super.setField("Global", global ?? false);
     super.setField("ReturnType", returnType?.toShortString() ?? ReturnType.direct.toShortString());
     super.setField("BinaryBlob", binaryBlob ?? false);
-    super.setField("FilterData", binaryBlob ?? false);
+    super.setField("FilterData", filterData ?? false);
+    super.setField("RealTimeFlag", realTimeFlag ?? false);
   }
 }

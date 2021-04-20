@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:free_chat/src/fcp/fcp.dart';
+import 'package:free_chat/src/fcp/model/persistence.dart';
 import 'package:free_chat/src/model.dart';
 import 'package:free_chat/src/utils/device.dart';
 import 'package:free_chat/src/utils/logger.dart';
@@ -56,7 +57,7 @@ class Networking {
   }
 
   Future<FcpMessage> getMessage(String uri, String identifier) async {
-    FcpClientGet fcpClienteGet = FcpClientGet(uri, identifier: identifier, global: true, persistence: Persistence.forever);
+    FcpClientGet fcpClienteGet = FcpClientGet(uri, identifier: identifier, global: true, persistence: Persistence.forever, realTimeFlag: true);
 
     FcpMessage t = await fcpConnection.sendFcpMessageAndWaitWithAwaitedResponse(fcpClienteGet, "AllData");
 
@@ -71,20 +72,23 @@ class Networking {
   Future<FcpMessage> sendMessage(String uri, String data, String identifier) async {
     var base64Str = stringToBase64.encode(data) + "\n";
 
-    FcpClientPut put = FcpClientPut(uri, base64Str, identifier: identifier, global: true, persistence: Persistence.forever, dataLength: base64Str.length, metaDataContentType: "text/plain");
+    FcpClientPut put = FcpClientPut(uri, base64Str, priorityClass: 2, dontCompress: true, identifier: identifier, global: true, persistence: Persistence.forever, dataLength: base64Str.length, metaDataContentType: "", realTimeFlag: true, extraInsertsSingleBlock: 0, extraInsertsSplitfileHeaderBlock: 0);
 
     _logger.i("Sending message: ${put.toString()}");
 
-    FcpMessage t = await fcpConnection.sendFcpMessageAndWaitWithAwaitedResponse(put, "PutSuccessful");
+    FcpMessage t = await fcpConnection.sendFcpMessageAndWaitWithAwaitedResponse(put, "PutSuccessful", errorResponse: "PutFailed");
 
+    if(t.name == "PutFailed") {
+      throw Exception(t);
+    }
 
-    _logger.i("Put Successful: $t}");
+    _logger.i("Put Status: $t}");
 
     return t;
   }
 
   Future<void> update(ChatDTO chatDTO) async {
-    FcpClientGet fcpClienteGet = FcpClientGet(chatDTO.requestUri, identifier: Uuid().v4() + "-chat");
+    FcpClientGet fcpClienteGet = FcpClientGet(chatDTO.requestUri, identifier: Uuid().v4() + "-chat", realTimeFlag: true, global: true, persistence: Persistence.forever);
     FcpSubscribeUSK fcpSubscribeUSK = FcpSubscribeUSK(chatDTO.requestUri, Uuid().v4());
 
     fcpConnection.sendFcpMessage(fcpClienteGet);

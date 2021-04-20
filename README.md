@@ -19,7 +19,7 @@ You can find a demo of the application [here](https://youtu.be/BP_sBDDAPgU)
 # Pain points
 - The ClientPut takes way too long (especially on the initial handshake, which can take over 10 minutes).
 - There are a couple of Failed Errors I don't quite get how to fix, eg. "Not enough data" (28) found with it the "A node killed the request because it had recently been tried and had DNFed" (30)
-
+- ShortCodeDescription=Too many path components error (RedirectURI=USK@MPfWVX5LRsV4Kydc7MZz~Dz-SF2vsACubh254FhGQf0,mscpVYfGntiupHWVzdc4CTa-VLjABC9MXGYYri8M~fc,AQACAAE/chat/2)
 # Sources
 - [https://flutter.dev/](https://flutter.dev/): Used to create the frontend of the application
 - [Freenet-Mobile](https://github.com/freenet-mobile/app): Needed to run a Freenet node on the smartphone, which is used to chat

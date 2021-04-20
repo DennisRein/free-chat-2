@@ -127,19 +127,19 @@ class FcpConnection {
     return fcpMessageQueue.getLastMessage();
   }
 
-  Future<FcpMessage> sendFcpMessageAndWaitWithAwaitedResponse(FcpMessage message, String awaitedResponse) async {
+  Future<FcpMessage> sendFcpMessageAndWaitWithAwaitedResponse(FcpMessage message, String awaitedResponse, {String errorResponse}) async {
     socket.write(message);
     FcpMessageHandler().identifierToUri[message.getField("Identifier")] = message.getField("URI");
 
-    await waitWhile(() => !(containsMessage(awaitedResponse, message.getField("Identifier"))));
+    await waitWhile(() => !(containsMessage(awaitedResponse, message.getField("Identifier"), errorResponse: errorResponse)));
 
     return _foundMessage;
   }
 
-  bool containsMessage(String type, String identifier) {
+  bool containsMessage(String type, String identifier, {String errorResponse}) {
     bool has = false;
     for(FcpMessage msg in fcpMessageQueue.messageQueue) {
-      if(msg.name == type && msg.getField("Identifier") == identifier) {
+      if((msg.name == type || msg.name == errorResponse ?? "") && msg.getField("Identifier") == identifier) {
         has = true;
         _foundMessage = msg;
       }

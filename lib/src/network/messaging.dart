@@ -38,7 +38,7 @@ class Messaging extends ChangeNotifier {
 
     _networking.sendMessage(chat.insertUri, _chat.toString(), Uuid().v4()).then((value) {
       _logger.i("Send Message Successful");
-      messageDTO.status = "send";
+      messageDTO.status = "sent";
       _databaseHandler.upsertMessage(messageDTO).then((value) => notifyListeners());
 
     });

@@ -19,6 +19,9 @@ class FcpClientPut extends FcpMessage {
       int dataLength,
       String filename,
       String targetUri,
+      bool realTimeFlag,
+      int extraInsertsSingleBlock,
+      int extraInsertsSplitfileHeaderBlock,
       }) : super("ClientPut") {
     super.setField("URI", uri);
     super.setField("Metadata.ContentType", metaDataContentType);
@@ -34,10 +37,12 @@ class FcpClientPut extends FcpMessage {
     super.setField("TargetFilename", targetFilename);
     super.setField("EarlyEncode", earlyEncode ?? false);
     super.setField("UploadFrom", uploadFrom?.toShortString() ?? ReturnType.direct.toShortString());
-
     super.setField("DataLength", dataLength);
     super.setField("Filename", filename);
     super.setField("TargetURI", targetUri);
+    super.setField("RealTimeFlag", realTimeFlag ?? false);
+    super.setField("ExtraInsertsSingleBlock", extraInsertsSingleBlock);
+    super.setField("ExtraInsertsSplitfileHeaderBlock", extraInsertsSplitfileHeaderBlock);
     super.data = data;
 
   }

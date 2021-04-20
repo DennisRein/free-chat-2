@@ -77,8 +77,6 @@ class Invite {
     Chat chat = Chat(_insertUri, initialInvite.getRequestUri(), initialInvite.encryptKey, [], initialInvite.getName(), initialInvite.sharedId);
 
 
-    _logger.i("Chat12 => $chat");
-
     InitialInviteResponse initialInviteResponse = InitialInviteResponse(_requestUri, Config.clientName);
 
     await Future.wait([

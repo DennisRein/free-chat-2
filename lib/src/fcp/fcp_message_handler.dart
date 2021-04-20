@@ -53,6 +53,7 @@ class FcpMessageHandler extends ChangeNotifier {
         }
       case 'PutFailed':
         {
+
           _logger.e(msg.toString());
           break;
         }
@@ -61,11 +62,11 @@ class FcpMessageHandler extends ChangeNotifier {
           _logger.i(msg.getField("Code"));
           if(msg.getField("Code") == "27") {
             _logger.i("Redirecting to new url");
-            FcpClientGet clientGet = FcpClientGet(msg.getField("RedirectURI"), identifier: msg.getField("Identifier"), global: true, persistence: Persistence.forever);
+            FcpClientGet clientGet = FcpClientGet(msg.getField("RedirectURI"), identifier: msg.getField("Identifier"), global: true, persistence: Persistence.forever, realTimeFlag: true);
             _fcpConnection.sendFcpMessage(clientGet);
           }
           if(msg.getField("Code") == "28") {
-            Future.delayed(const Duration(seconds: 10), () => _fcpConnection.sendFcpMessage(FcpClientGet(identifierToUri[msg.getField("Identifier")],identifier: msg.getField("Identifier"), global: true, persistence: Persistence.forever)));
+            Future.delayed(const Duration(seconds: 10), () => _fcpConnection.sendFcpMessage(FcpClientGet(identifierToUri[msg.getField("Identifier")],identifier: msg.getField("Identifier"), global: true, persistence: Persistence.forever, realTimeFlag: true)));
           }
           _logger.e(msg.toString());
           break;
@@ -120,7 +121,7 @@ class FcpMessageHandler extends ChangeNotifier {
           _logger.i("SubscribedUpdate $identifier + ${msg.getField("URI")}");
 
           FcpClientGet fcpClienteGet = FcpClientGet(msg.getField("URI"),
-              identifier: identifier, maxRetries: -1);
+              identifier: identifier, maxRetries: -1, realTimeFlag: true);
 
           identifierToUri[identifier] = msg.getField("URI");
 
