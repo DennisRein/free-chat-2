@@ -51,12 +51,6 @@ class Messaging extends ChangeNotifier {
 
     ChatDTO chatDTO = await _databaseHandler.fetchChatBySharedId(chat.sharedId);
 
-    print(chat.toString());
-    print(json);
-    for(var db in await _databaseHandler.fetchAllChats()) {
-      print(db.sharedId);
-    }
-
     updateMessages(chatDTO, chat);
 
   }
