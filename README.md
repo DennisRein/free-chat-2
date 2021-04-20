@@ -21,7 +21,7 @@ You can find a demo of the application [here](https://youtu.be/BP_sBDDAPgU)
 - There are a couple of Failed Errors I don't quite get how to fix, eg. "Not enough data" (28) found with it the "A node killed the request because it had recently been tried and had DNFed" (30)
 
 # Sources
-[https://flutter.dev/](https://flutter.dev/): Used to create the frontend of the application
-[Freenet-Mobile](https://github.com/freenet-mobile/app): Needed to run a Freenet node on the smartphone, which is used to chat
-[jFCPlib](https://github.com/Bombe/jFCPlib): As an inspiration for writing the FCP wrapper in Dart
-[FCPv2](https://github.com/freenet/wiki/wiki/FCPv2): Used to create the FCP wrapper
+- [https://flutter.dev/](https://flutter.dev/): Used to create the frontend of the application
+- [Freenet-Mobile](https://github.com/freenet-mobile/app): Needed to run a Freenet node on the smartphone, which is used to chat
+- [jFCPlib](https://github.com/Bombe/jFCPlib): As an inspiration for writing the FCP wrapper in Dart
+- [FCPv2](https://github.com/freenet/wiki/wiki/FCPv2): Used to create the FCP wrapper
