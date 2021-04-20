@@ -22,6 +22,7 @@ class Chat {
   String _requestUri;
   String _encryptKey;
   String _with;
+  String sharedId;
   List<Message> _messages;
 
   get insertUri => _insertUri;
@@ -31,10 +32,10 @@ class Chat {
 
   get messages => _messages;
 
-  Chat(this._insertUri, this._requestUri, this._encryptKey, this._messages, this._with);
+  Chat(this._insertUri, this._requestUri, this._encryptKey, this._messages, this._with, this.sharedId);
 
   factory Chat.fromDTO(ChatDTO dto, List<Message> messages) {
-    return Chat(dto.insertUri, dto.requestUri, dto.encryptKey, messages, dto.name);
+    return Chat(dto.insertUri, dto.requestUri, dto.encryptKey, messages, dto.name, dto.sharedId);
   }
 
   factory Chat.fromJson(dynamic json, String requestUri) {
@@ -45,7 +46,8 @@ class Chat {
     return Chat.onlyInfo(
       json["with"],
       parsedMessages,
-      requestUri
+      requestUri,
+      json["sharedId"]
     );
   }
 
@@ -58,11 +60,12 @@ class Chat {
       'insertUri': _insertUri,
       'requestUri': _requestUri,
       'encryptKey': _encryptKey,
-      'with': _with
+      'with': _with,
+      'sharedId': sharedId
     };
   }
 
-  Chat.onlyInfo(this._with, this._messages, this._requestUri);
+  Chat.onlyInfo(this._with, this._messages, this._requestUri, this.sharedId);
 
   List<User> getUsers() {
     //return this._users;
@@ -83,7 +86,7 @@ class Chat {
     String messages = propertyToJsonListString(_messages);
 
 
-    return '{"with": "$_with","messages": $messages}';
+    return '{"sharedId": "$sharedId", "with": "$_with", "messages": $messages}';
 
   }
 

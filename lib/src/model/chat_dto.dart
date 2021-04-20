@@ -9,9 +9,10 @@ class ChatDTO {
   String requestUri;
   String encryptKey;
   String name;
+  String sharedId;
   int id;
 
-  static final columns = ["id", "insertUri", "requestUri", "encryptKey", "name"];
+  static final columns = ["id", "insertUri", "requestUri", "encryptKey", "name", "sharedId"];
 
   Map<String, Object> toMap() {
     Map<String, Object> map = {
@@ -19,6 +20,7 @@ class ChatDTO {
       "requestUri": requestUri,
       "encryptKey": encryptKey,
       "name": name,
+      "sharedId": sharedId
     };
 
     if (id != null) {
@@ -35,6 +37,7 @@ class ChatDTO {
     chat.insertUri= map["insertUri"];
     chat.encryptKey= map["encryptKey"];
     chat.name = map["name"];
+    chat.sharedId = map["sharedId"];
 
     return chat;
   }
@@ -45,6 +48,7 @@ class ChatDTO {
     chatDTO.insertUri= chat.insertUri;
     chatDTO.encryptKey= chat.encryptKey;
     chatDTO.name = chat.name;
+    chatDTO.sharedId = chat.sharedId;
 
     return chatDTO;
   }

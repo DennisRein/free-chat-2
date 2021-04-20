@@ -5,8 +5,9 @@ class Message {
   String _timestamp;
   String _sender;
   String _messageType;
+  String status;
 
-  Message(this._message, this._timestamp, this._sender, this._messageType);
+  Message(this._message, this._timestamp, this._sender, this._messageType, this.status);
 
   get messageType => _messageType;
 
@@ -16,7 +17,7 @@ class Message {
 
 
   factory Message.fromDTO(MessageDTO dto) {
-    return Message(dto.message, dto.timestamp, dto.sender, dto.messageTyp);
+    return Message(dto.message, dto.timestamp, dto.sender, dto.messageTyp, dto.status);
   }
 
   factory Message.fromJson(dynamic json) {
@@ -24,7 +25,8 @@ class Message {
       json["message"],
       json["timestamp"],
       json["sender"],
-      "receiver"
+      "receiver",
+      "received"
     );
   }
 

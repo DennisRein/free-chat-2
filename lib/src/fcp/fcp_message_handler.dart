@@ -25,6 +25,8 @@ class FcpMessageHandler extends ChangeNotifier {
 
   List<String> _identifiers = [];
 
+  List<String> _allData = [];
+
   HashMap<String, Map<String, dynamic>> progress = HashMap();
 
   HashMap<String, String> identifierToUri = HashMap();
@@ -35,12 +37,10 @@ class FcpMessageHandler extends ChangeNotifier {
     switch (msg.name) {
       case 'PersistentGet':
         {
-          var ident = msg.getField("Identifier");
           break;
         }
       case 'PersistentPut':
         {
-          var ident = msg.getField("Identifier");
           break;
         }
       case 'PutSuccessful':
@@ -61,24 +61,24 @@ class FcpMessageHandler extends ChangeNotifier {
           _logger.i(msg.getField("Code"));
           if(msg.getField("Code") == "27") {
             _logger.i("Redirecting to new url");
-            FcpClientGet clientGet = FcpClientGet(msg.getField("RedirectURI").replaceAll("Re-", ""), identifier: msg.getField("Identifier"), global: true, persistence: Persistence.forever);
+            FcpClientGet clientGet = FcpClientGet(msg.getField("RedirectURI"), identifier: msg.getField("Identifier"), global: true, persistence: Persistence.forever);
             _fcpConnection.sendFcpMessage(clientGet);
           }
           if(msg.getField("Code") == "28") {
-
+            Future.delayed(const Duration(seconds: 10), () => _fcpConnection.sendFcpMessage(FcpClientGet(identifierToUri[msg.getField("Identifier")],identifier: msg.getField("Identifier"), global: true, persistence: Persistence.forever)));
           }
           _logger.e(msg.toString());
           break;
         }
       case 'AllData':
         {
+          if(_allData.contains(msg.data))
+            return;
+          _allData.add(msg.data);
           if (msg.getField("Identifier").contains("-chat")) {
             Fluttertoast.showToast(
                 msg: "New message has arrived!",
                 toastLength: Toast.LENGTH_LONG);
-            _logger.i("NEW MESSAGE => ${msg.toString()}");
-            print(msg.getField("Identifier"));
-            print(identifierToUri.toString());
             _messaging.updateChat(
                 msg, identifierToUri[msg.getField("Identifier")]);
           }
@@ -107,6 +107,10 @@ class FcpMessageHandler extends ChangeNotifier {
             "Total": msg.getField("Total"),
             "Succeeded": msg.getField("Succeeded")
           };
+          if(_allData.contains(ident) || _identifiers.contains(ident)) {
+            break;
+          }
+          Future.delayed(const Duration(seconds: 10), () => _fcpConnection.sendFcpMessage(FcpGetRequestStatus(ident, global: true)));
           notifyListeners();
           break;
         }
@@ -116,13 +120,12 @@ class FcpMessageHandler extends ChangeNotifier {
           _logger.i("SubscribedUpdate $identifier + ${msg.getField("URI")}");
 
           FcpClientGet fcpClienteGet = FcpClientGet(msg.getField("URI"),
-              identifier: identifier);
+              identifier: identifier, maxRetries: -1);
 
           identifierToUri[identifier] = msg.getField("URI");
 
-          _fcpConnection.sendFcpMessage(fcpClienteGet);
+          Future.delayed(Duration(seconds: 10), () => _fcpConnection.sendFcpMessage(fcpClienteGet));
         }
     }
   }
 }
-//68353420-2d87-4580-9d22-0f9b539e8778-chat + USK@hB8BSerNWPsaWM8TtektVejwCLs8FfImPtv1ivTkKUs,PWruJ0asNDCha2jSehxDXl58QziO9e05HkMlp3GFETo,AQACAAE/chat/4

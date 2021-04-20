@@ -36,22 +36,26 @@ class Messaging extends ChangeNotifier {
 
     Chat _chat = Chat.fromDTO(chat, messages);
 
-    _networking.sendMessage(chat.insertUri, _chat.toString(), Uuid().v4());
+    _networking.sendMessage(chat.insertUri, _chat.toString(), Uuid().v4()).then((value) {
+      _logger.i("Send Message Successful");
+      messageDTO.status = "send";
+      _databaseHandler.upsertMessage(messageDTO).then((value) => notifyListeners());
+
+    });
   }
 
   Future<void> updateChat(FcpMessage fcpMessage, String requestUri) async {
 
-    if(requestUri == null) return;
-
     String json = stringToBase64.decode(fcpMessage.data);
     Chat chat = Chat.fromJson(jsonDecode(json), requestUri);
 
-    print(requestUri);
+    ChatDTO chatDTO = await _databaseHandler.fetchChatBySharedId(chat.sharedId);
 
-    ChatDTO chatDTO = await _databaseHandler.fetchChatByRequestUri(requestUri);
-
-
-    _logger.i("Chat from Update => ${(await (_databaseHandler.fetchAllChats())) [0].requestUri}");
+    print(chat.toString());
+    print(json);
+    for(var db in await _databaseHandler.fetchAllChats()) {
+      print(db.sharedId);
+    }
 
     updateMessages(chatDTO, chat);
 
@@ -70,17 +74,12 @@ class Messaging extends ChangeNotifier {
         }
       }
       String checkString = msg.message + msg.messageType + msg.getTimestamp() + msg.sender;
-      print(flag);
-      print(updated.contains(msg));
-      print(checkString);
-      print("=====");
-
       if(!flag && !updated.contains(checkString)) {
         updated.add(checkString);
-        print("Updating message ${msg.toString()}");
         MessageDTO messageDTO = MessageDTO.fromMessage(msg);
         messageDTO.messageTyp = "receiver";
         messageDTO.chatId = chatDTO.id;
+        messageDTO.status = "received";
         await _databaseHandler.upsertMessage(messageDTO);
         notifyListeners();
       }

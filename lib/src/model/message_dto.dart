@@ -11,12 +11,13 @@ class MessageDTO {
   int chatId;
   ChatDTO chat;
   String messageTyp;
+  String status;
 
   get message => _message;
   get timestamp => _timestamp;
   get sender => _sender;
 
-  static final columns = ["id", "message", "timestamp", "chatId", "sender", "messageType"];
+  static final columns = ["id", "message", "timestamp", "chatId", "sender", "messageType", "status"];
 
   Map toMap() {
     Map<String, Object> map = {
@@ -24,7 +25,8 @@ class MessageDTO {
       "timestamp": _timestamp,
       "chatId": chatId,
       "sender": sender,
-      "messageType": messageTyp
+      "messageType": messageTyp,
+      "status": status
     };
 
     if (id != null) {
@@ -42,7 +44,7 @@ class MessageDTO {
     messageDTO.chatId = map["chatId"];
     messageDTO._sender = map["sender"];
     messageDTO.messageTyp = map["messageType"];
-
+    messageDTO.status = map["status"];
     return messageDTO;
   }
 
@@ -51,6 +53,7 @@ class MessageDTO {
     messageDTO._message = message.getMessage();
     messageDTO._timestamp = message.getTimestamp();
     messageDTO._sender = message.sender;
+    messageDTO.status = message.status;
 
     return messageDTO;
   }

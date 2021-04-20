@@ -77,6 +77,9 @@ class Networking {
 
     FcpMessage t = await fcpConnection.sendFcpMessageAndWaitWithAwaitedResponse(put, "PutSuccessful");
 
+
+    _logger.i("Put Successful: $t}");
+
     return t;
   }
 

@@ -58,50 +58,22 @@ class HomeController {
   }
 
   Future<void> join(BuildContext context) async {
-    /*Networking networking = Networking();
-    SSKKey key = await networking.getKeys();
-
-    String data = "{txt: 3}\n";
-
-    var put = FcpClientPut(key.getAsUskInsertUri() + "test.txt/0/", data, priorityClass: 1, filename: "test.txt", global: true, persistence: Persistence.forever, metaDataContentType: "text/plain", identifier: Uuid().v4(), dataLength: data.length);
-
-    print(key.getAsUskInsertUri() + "test.txt/0/");
-
-    networking.fcpConnection.sendFcpMessage(put);
-    */
     var i = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => HomeJoin()),
     );
 
-    var invite = jsonDecode(i);
-    var initialInvite = InitialInvite.fromJson(invite);
+    var initialInvite = InitialInvite.fromBase64(i);
 
     String identifier1 = Uuid().v4();
     String identifier2 = Uuid().v4();
     String identifier3 = Uuid().v4();
 
-    LoadingPopupWithProgressCall.build(context, "Joining chat room this can take up to a couple minutes", [identifier1, identifier2, identifier3]);
+    LoadingPopupWithProgressCall.build(context, "Joining chat with ${initialInvite.getName()} this can take up to a couple minutes", [identifier1, identifier2, identifier3]);
 
     await Invite().handleInvitation(initialInvite, identifier1, identifier2, identifier3);
 
     Navigator.pop(context);
-
-
-
-  }
-
-  Future<void> update() async {
-
-    //InitialInvite initialInvite = InitialInvite.fromJson(jsonDecode('{"requestUri": "USK@NYU78JteGVdK-DzU2jC04tm~HSOdBmVqWOiQkp8kFb8,wdYBH7gef1Iz8sikL6siIjsmOr2cFlTv6zQ1STHTffg,AQACAAE/chat.json/0/", "handshakeUri": "KSK@bca38c4f-df09-4f11-8545-b619c4c4b87b", "name": "Dennis", "encryptKey": "f53e3efa-dc0f-49a9-a8c5-53938a29c086"}'));
-
-    //await Invite().inviteAccepted(initialInvite);
-
-    var list = await DatabaseHandler().fetchAllChats();
-    for(var dto in list) {
-      print(dto.requestUri);
-    }
-
   }
 
   String getTextForButton() {

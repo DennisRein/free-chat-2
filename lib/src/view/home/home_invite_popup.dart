@@ -18,7 +18,7 @@ class HomeInvitePopup {
                 width: 300,
                 child:
                 QrImage(
-                  data: invite.toString(),
+                  data: invite.toBase64(),
                   version: QrVersions.auto,
                   size: 300,
                 )

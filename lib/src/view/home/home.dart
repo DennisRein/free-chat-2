@@ -33,11 +33,8 @@ class _MyHomeState extends State<Home> {
 
     await homeController.initNode();
 
-    print(sharedPreferences.containsKey("clientName"));
-
     if(sharedPreferences.containsKey("clientName")) {
       Config.clientName = sharedPreferences.getString("clientName");
-      print(Config.clientName);
     }
     else {
       SchedulerBinding.instance.addPostFrameCallback((_) async {

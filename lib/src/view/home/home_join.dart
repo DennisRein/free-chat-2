@@ -11,6 +11,7 @@ class HomeJoin extends StatefulWidget {
 
 class _HomeJoinState extends State<HomeJoin> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  BuildContext currentContext;
   Barcode result;
   QRViewController controller;
   final myController = TextEditingController();
@@ -29,6 +30,7 @@ class _HomeJoinState extends State<HomeJoin> {
 
   @override
   Widget build(BuildContext context) {
+    currentContext = context;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.pop(context, myController.text),
@@ -37,21 +39,19 @@ class _HomeJoinState extends State<HomeJoin> {
         children: <Widget>[
           Expanded(
             flex: 5,
-           child: Text("Holder"),
-           /*child: QRView(
+           //child: Text("Holder"),
+           child: QRView(
               key: qrKey,
               onQRViewCreated: _onQRViewCreated,
-            ),*/
+            ),
           ),
           Expanded(
             flex: 1,
             child: Center(
               child: (result != null)
                   ? Text(
-                  'Barcode Type: ${describeEnum(result.format)}   Data: ${result.code}')
-                  : TextField(
-                controller: myController,
-              ),
+                  '${result.code}')
+                  : Text(""),
             ),
           )
         ],
@@ -63,8 +63,14 @@ class _HomeJoinState extends State<HomeJoin> {
     this.controller = controller;
     controller.scannedDataStream.listen((scanData) {
       setState(() {
+        if(scanData.format == BarcodeFormat.qrcode && scanData.code.isNotEmpty
+        ) {
+          myController.text = scanData.code;
+        }
         result = scanData;
       });
+
+
     });
   }
 

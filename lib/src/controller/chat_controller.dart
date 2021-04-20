@@ -22,7 +22,7 @@ class ChatController {
 
     var timestamp = formatDate(DateTime.now(), [dd, '/', mm, '/', yyyy, ' ', HH, ':', nn]);
 
-    Message message = Message(text, timestamp, Config.clientName, "sender");
+    Message message = Message(text, timestamp, Config.clientName, "sender", "sending");
 
     await _messaging.sendMessage(chat, message);
   }

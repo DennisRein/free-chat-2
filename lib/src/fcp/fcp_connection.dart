@@ -114,10 +114,12 @@ class FcpConnection {
   Future<void> sendFcpMessage(FcpMessage message) async {
     _logger.i("Sending message: ${message.toString()}");
     socket.write(message);
+    FcpMessageHandler().identifierToUri[message.getField("Identifier")] = message.getField("URI");
   }
 
   Future<FcpMessage> sendFcpMessageAndWait(FcpMessage message) async {
     socket.write(message);
+    FcpMessageHandler().identifierToUri[message.getField("Identifier")] = message.getField("URI");
     FcpMessage lastMessage = fcpMessageQueue.getLastMessage();
 
     await waitWhile(() => lastMessage == fcpMessageQueue.getLastMessage());
@@ -127,6 +129,7 @@ class FcpConnection {
 
   Future<FcpMessage> sendFcpMessageAndWaitWithAwaitedResponse(FcpMessage message, String awaitedResponse) async {
     socket.write(message);
+    FcpMessageHandler().identifierToUri[message.getField("Identifier")] = message.getField("URI");
 
     await waitWhile(() => !(containsMessage(awaitedResponse, message.getField("Identifier"))));
 

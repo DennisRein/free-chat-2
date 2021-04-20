@@ -48,9 +48,11 @@ class Invite {
 
     String _encrypt = Uuid().v4();
 
-    InitialInvite initialInvite = new InitialInvite(_requestUri, _listeningUri, _name, _encrypt, _insertUri);
+    String _sharedId = Uuid().v4();
 
-    Chat chat = Chat(_insertUri, "", _encrypt, [], _name);
+    InitialInvite initialInvite = new InitialInvite(_requestUri, _listeningUri, _name, _encrypt, _insertUri, _sharedId);
+
+    Chat chat = Chat(_insertUri, "", _encrypt, [], _name, _sharedId);
 
     _logger.i("Created Initial invite: ${initialInvite.toString()}");
 
@@ -70,7 +72,12 @@ class Invite {
 
     String _unique = Uuid().v4();
 
-    Chat chat = Chat(_insertUri, initialInvite.getRequestUri(), initialInvite.encryptKey, [], initialInvite.getName());
+    _logger.i("InitialInvite12 => $initialInvite");
+
+    Chat chat = Chat(_insertUri, initialInvite.getRequestUri(), initialInvite.encryptKey, [], initialInvite.getName(), initialInvite.sharedId);
+
+
+    _logger.i("Chat12 => $chat");
 
     InitialInviteResponse initialInviteResponse = InitialInviteResponse(_requestUri, Config.clientName);
 
@@ -88,7 +95,11 @@ class Invite {
 
     _networking.fcpConnection.sendFcpMessage(fcpSubscribeUSK);
 
-    await _databaseHandler.upsertChat(ChatDTO.fromChat(chat));
+    ChatDTO dto = ChatDTO.fromChat(chat);
+
+    _logger.i("dto => $dto");
+
+    await _databaseHandler.upsertChat(dto);
   }
 
   Future<void> inviteAccepted(InitialInvite initialInvite) async {
@@ -108,6 +119,7 @@ class Invite {
     chatDTO.encryptKey = initialInvite.encryptKey;
     chatDTO.requestUri = response.requestUri;
     chatDTO.name = response.name;
+    chatDTO.sharedId = initialInvite.sharedId;
 
     _logger.i(chatDTO.toMap().toString());
 

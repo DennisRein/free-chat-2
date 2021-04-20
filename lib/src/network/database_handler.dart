@@ -24,10 +24,10 @@ class DatabaseHandler {
       onCreate: (db, version) {
         return Future.wait([
           db.execute(
-            "CREATE TABLE chat(id INTEGER PRIMARY KEY, insertUri TEXT, requestUri TEXT, encryptKey TEXT, name TEXT)",
+            "CREATE TABLE chat(id INTEGER PRIMARY KEY, insertUri TEXT, requestUri TEXT, encryptKey TEXT, name TEXT, sharedId TEXT)",
           ),
           db.execute(
-            "CREATE TABLE message(id INTEGER PRIMARY KEY, sender TEXT, message TEXT, timestamp TEXT, chatId INTEGER, messageType TEXT, FOREIGN KEY (chatId) REFERENCES Chat (id) ON DELETE NO ACTION ON UPDATE NO ACTION)",
+            "CREATE TABLE message(id INTEGER PRIMARY KEY, sender TEXT, message TEXT, status TEXT, timestamp TEXT, chatId INTEGER, messageType TEXT, FOREIGN KEY (chatId) REFERENCES Chat (id) ON DELETE NO ACTION ON UPDATE NO ACTION)",
           )
         ]);
       },
@@ -72,6 +72,19 @@ class DatabaseHandler {
     List<Map> results = await _database.query("chat", columns: ChatDTO.columns,
         where: "insertUri = ?",
         whereArgs: [insertUri]);
+
+    if (results.length == 0)
+      return null;
+
+    ChatDTO chat = ChatDTO.fromMap(results[0]);
+
+    return chat;
+  }
+
+  Future<ChatDTO> fetchChatBySharedId(String sharedId) async {
+    List<Map> results = await _database.query("chat", columns: ChatDTO.columns,
+        where: "sharedId = ?",
+        whereArgs: [sharedId]);
 
     if (results.length == 0)
       return null;

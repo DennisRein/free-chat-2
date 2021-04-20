@@ -28,8 +28,6 @@ class _ChatsDetailState extends State<ChatsDetail> {
       if(!mounted)
         return;
 
-      print("Updating screen I think?");
-
       setState(() {
 
       });
@@ -114,19 +112,25 @@ class _ChatsDetailState extends State<ChatsDetail> {
                                   (messages[index].messageType == "receiver"
                                       ? Alignment.topLeft
                                       : Alignment.topRight),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color:
-                                      (messages[index].messageType == "receiver"
-                                          ? Colors.grey.shade200
-                                          : Colors.blue[200]),
-                                ),
-                                padding: EdgeInsets.all(16),
-                                child: Text(
-                                  messages[index].message,
-                                  style: TextStyle(fontSize: 15),
-                                ),
+                              child: Column(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color:
+                                          (messages[index].messageType == "receiver"
+                                              ? Colors.grey.shade200
+                                              : Colors.blue[200]),
+                                    ),
+                                    padding: EdgeInsets.all(16),
+                                    child: Text(
+                                      messages[index].message,
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                  ),
+                                  Text(messages[index].getTimestamp()),
+                                  Text(messages[index].status),
+                                ],
                               ),
                             ));
                       },
