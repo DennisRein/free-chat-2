@@ -48,10 +48,9 @@ class _HomeJoinState extends State<HomeJoin> {
           Expanded(
             flex: 1,
             child: Center(
-              child: (result != null)
-                  ? Text(
-                  '${result.code}')
-                  : Text(""),
+              child: TextField(
+                controller: myController,
+              )
             ),
           )
         ],

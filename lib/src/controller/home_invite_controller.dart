@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:free_chat/src/fcp/fcp.dart';
 import 'package:free_chat/src/model.dart';
 import 'package:free_chat/src/network/database_handler.dart';
@@ -34,6 +36,11 @@ class HomeInviteController {
     Navigator.pop(context);
     Navigator.pop(context);
 
+  }
+
+  void copyToClipboard(InitialInvite invite) {
+    Clipboard.setData(new ClipboardData(text: invite.toBase64()));
+    Fluttertoast.showToast(msg: "Copied to clipboard", toastLength: Toast.LENGTH_LONG);
   }
 
 }

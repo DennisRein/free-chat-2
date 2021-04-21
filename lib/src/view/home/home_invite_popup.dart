@@ -27,6 +27,8 @@ class HomeInvitePopup {
         ),
       ),
       actions: <Widget>[
+        ElevatedButton(onPressed: () async => { _homeInviteController.copyToClipboard(invite) }, child: Text("Copy invite code"), style: ElevatedButton.styleFrom()
+        ),
         new FlatButton(
           onPressed: () {
             Navigator.of(context).pop();
@@ -34,9 +36,7 @@ class HomeInvitePopup {
           textColor: Theme.of(context).primaryColor,
           child: const Text('Close'),
         ),
-        ElevatedButton(onPressed: () async => { await _homeInviteController.inviteAccepted(invite, context) }, child: Text("Done"), style: ElevatedButton.styleFrom(
-
-        )
+        ElevatedButton(onPressed: () async => { await _homeInviteController.inviteAccepted(invite, context) }, child: Text("Done"), style: ElevatedButton.styleFrom()
         ),
       ],
     );
