@@ -49,6 +49,7 @@ class FcpMessageHandler extends ChangeNotifier {
               msg: "Upload of one message finished!",
               toastLength: Toast.LENGTH_LONG);
           _identifiers.add(msg.getField('Identifier'));
+          _logger.i(msg.toString());
           break;
         }
       case 'PutFailed':
@@ -68,7 +69,7 @@ class FcpMessageHandler extends ChangeNotifier {
           if(msg.getField("Code") == "28") {
             Future.delayed(const Duration(seconds: 10), () => _fcpConnection.sendFcpMessage(FcpClientGet(identifierToUri[msg.getField("Identifier")],identifier: msg.getField("Identifier"), global: true, persistence: Persistence.forever, realTimeFlag: true)));
           }
-          _logger.e(msg.toString());
+          _logger.e(msg.toString() + identifierToUri[msg.getField("Identifier")]);
           break;
         }
       case 'AllData':

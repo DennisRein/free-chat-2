@@ -71,9 +71,13 @@ class HomeController {
 
     LoadingPopupWithProgressCall.build(context, "Joining chat with ${initialInvite.getName()} this can take up to a couple minutes", [identifier1, identifier2, identifier3]);
 
-    await Invite().handleInvitation(initialInvite, identifier1, identifier2, identifier3);
+    if(await Invite().handleInvitation(initialInvite, identifier1, identifier2, identifier3))
+      Navigator.pop(context);
+    else {
+      Navigator.pop(context);
+      ErrorPopup.build(context, "An error occured while trying to join the chat room, please try again later");
 
-    Navigator.pop(context);
+    }
   }
 
   String getTextForButton() {

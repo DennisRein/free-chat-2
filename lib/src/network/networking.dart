@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:free_chat/src/fcp/fcp.dart';
 import 'package:free_chat/src/fcp/model/persistence.dart';
 import 'package:free_chat/src/model.dart';
@@ -59,7 +60,11 @@ class Networking {
   Future<FcpMessage> getMessage(String uri, String identifier) async {
     FcpClientGet fcpClienteGet = FcpClientGet(uri, identifier: identifier, global: true, persistence: Persistence.forever, realTimeFlag: true);
 
-    FcpMessage t = await fcpConnection.sendFcpMessageAndWaitWithAwaitedResponse(fcpClienteGet, "AllData");
+    FcpMessage t = await fcpConnection.sendFcpMessageAndWaitWithAwaitedResponse(fcpClienteGet, "AllData", errorResponse: "GetFailed");
+
+    if(t.name == "GetFailed") {
+      throw Exception(t);
+    }
 
     var data = t.data;
     stringToBase64.decode(data);
