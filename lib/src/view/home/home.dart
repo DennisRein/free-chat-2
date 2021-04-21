@@ -59,10 +59,6 @@ class _MyHomeState extends State<Home> {
             appBar: AppBar(
               title: const Text('FreeChat'),
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Chats()),),
-            ),
             body: Center(
               child: Padding(
                 padding: const EdgeInsets.all(36.0),
@@ -73,6 +69,15 @@ class _MyHomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(homeController.getTextForButton()),
+                        SizedBox(height: 35.0),
+                        ElevatedButton(onPressed: () { Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Chats())); }, child: Text("Show current Chats"), style: ElevatedButton.styleFrom(
+                          textStyle: TextStyle(
+                              fontSize: 40,
+                              fontFamily: "PTSans"
+                          ),
+                        )
+                        ),
                         SizedBox(height: 35.0),
                         ElevatedButton(onPressed: () async { await homeController.invite(context); setState(() { }); }, child: Text("Invite to Chat"), style: ElevatedButton.styleFrom(
                           textStyle: TextStyle(

@@ -26,8 +26,8 @@ class Networking {
   Networking._internal();
 
   Future<Node> connectClient() async {
-    var _deviceId = await Device.getId();
 
+    var _deviceId = Uuid().v4();
     fcpConnection = FcpConnection();
 
     await fcpConnection.connect();

@@ -7,6 +7,7 @@ import 'package:free_chat/src/network/database_handler.dart';
 import 'package:free_chat/src/network/invite.dart';
 import 'package:free_chat/src/network/networking.dart';
 import 'package:free_chat/src/utils/logger.dart';
+import 'package:free_chat/src/utils/toast.dart';
 import 'package:free_chat/src/view.dart';
 
 class HomeInviteController {
@@ -40,7 +41,7 @@ class HomeInviteController {
 
   void copyToClipboard(InitialInvite invite) {
     Clipboard.setData(new ClipboardData(text: invite.toBase64()));
-    Fluttertoast.showToast(msg: "Copied to clipboard", toastLength: Toast.LENGTH_LONG);
+    FreeToast.showToast("Copied to clipboard");
   }
 
 }
