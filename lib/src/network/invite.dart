@@ -79,11 +79,7 @@ class Invite {
     InitialInviteResponse initialInviteResponse = InitialInviteResponse(_requestUri, Config.clientName);
 
     List req = [];
-    for(int i = 0; i < 3; i++) {
-      req.add(_networking.sendMessage(
-          "${initialInvite.getHandshakeUri()}$i", initialInviteResponse.toString(),
-          "$identifierHandshake-$i "));
-    }
+
     for(int i = 3; i < 20; i++) {
       _networking.sendMessage(
           "${initialInvite.getHandshakeUri()}$i", initialInviteResponse.toString(),

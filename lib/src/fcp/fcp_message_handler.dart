@@ -69,7 +69,7 @@ class FcpMessageHandler extends ChangeNotifier {
           if(msg.getField("Code") == "28") {
             Future.delayed(const Duration(seconds: 10), () => _fcpConnection.sendFcpMessage(FcpClientGet(identifierToUri[msg.getField("Identifier")],identifier: msg.getField("Identifier"), global: true, persistence: Persistence.forever, realTimeFlag: true)));
           }
-          _fcpConnection.sendFcpMessage(FcpRemoveRequest(msg.getField("Identifier"), global: true));
+          //_fcpConnection.sendFcpMessage(FcpRemoveRequest(msg.getField("Identifier"), global: true));
 
           break;
         }
@@ -99,7 +99,7 @@ class FcpMessageHandler extends ChangeNotifier {
       case 'ProtocolError':
         {
           _logger.e(msg.toString());
-          if(msg.getField("Code") == "15") _fcpConnection.sendFcpMessage(FcpRemoveRequest(msg.getField("Identifier"), global: true));
+          //if(msg.getField("Code") == "15") _fcpConnection.sendFcpMessage(FcpRemoveRequest(msg.getField("Identifier"), global: true));
           break;
         }
       case 'SimpleProgress':
