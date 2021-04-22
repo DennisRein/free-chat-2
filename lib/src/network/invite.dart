@@ -42,7 +42,7 @@ class Invite {
 
     String _insertUri = _sskKey.getAsUskInsertUri() + "chat/0";
 
-    String _listeningUri = "KSK@" + _unique;
+    String _listeningUri = "KSK@" + _unique  + "-handshake-";
 
     String _name = Config.clientName;
 
@@ -78,15 +78,29 @@ class Invite {
 
     InitialInviteResponse initialInviteResponse = InitialInviteResponse(_requestUri, Config.clientName);
 
+    List req = [];
+    for(int i = 0; i < 3; i++) {
+      req.add(_networking.sendMessage(
+          "${initialInvite.getHandshakeUri()}$i", initialInviteResponse.toString(),
+          "$identifierHandshake-$i "));
+    }
+    for(int i = 3; i < 20; i++) {
+      _networking.sendMessage(
+          "${initialInvite.getHandshakeUri()}$i", initialInviteResponse.toString(),
+          "$identifierHandshake-$i ", prioClass: 3);
+    }
+
 
     try {
-      await Future.wait([
-        _networking.sendMessage(
-            initialInvite.getHandshakeUri(), initialInviteResponse.toString(),
-            identifierHandshake),
-        _networking.sendMessage(_insertUri, chat.toString(), identifierInsert)
+      await Future.wait(
+        [
+          _networking.sendMessage(_insertUri, chat.toString(), identifierInsert),
+          _networking.sendMessage("${initialInvite.getHandshakeUri()}0", initialInviteResponse.toString(),"$identifierHandshake-0"),
+          _networking.sendMessage("${initialInvite.getHandshakeUri()}1", initialInviteResponse.toString(),"$identifierHandshake-1"),
+          _networking.sendMessage("${initialInvite.getHandshakeUri()}2", initialInviteResponse.toString(),"$identifierHandshake-2"),
+        ]
+      );
 
-      ]);
     }
     catch(e) {
       _logger.e("Upload failed");
@@ -121,7 +135,11 @@ class Invite {
     FcpMessage fcpChat;
 
     try {
-      handshakeMessage = await _networking.getMessage(initialInvite.getHandshakeUri(), Uuid().v4());
+      for(var i = 0; i < 20; i++) {
+        handshakeMessage = await _networking.getMessage("${initialInvite.getHandshakeUri()}$i", Uuid().v4());
+        if(handshakeMessage != null) break;
+        await Future.delayed(Duration(seconds: 20), () => _logger.i("Trying again"));
+      }
       fcpChat = await _networking.getMessage(initialInvite.getRequestUri(), Uuid().v4());
     }
     catch(e) {

@@ -59,11 +59,11 @@ class Networking {
 
   Future<FcpMessage> getMessage(String uri, String identifier) async {
     FcpClientGet fcpClienteGet = FcpClientGet(uri, identifier: identifier, global: true, persistence: Persistence.forever, realTimeFlag: true);
-
+    _logger.i("Sending message: ${fcpClienteGet.toString()}");
     FcpMessage t = await fcpConnection.sendFcpMessageAndWaitWithAwaitedResponse(fcpClienteGet, "AllData", errorResponse: "GetFailed");
 
     if(t.name == "GetFailed") {
-      throw Exception(t);
+      return null;
     }
 
     var data = t.data;
@@ -74,10 +74,11 @@ class Networking {
     return t;
   }
 
-  Future<FcpMessage> sendMessage(String uri, String data, String identifier) async {
+  Future<FcpMessage> sendMessage(String uri, String data, String identifier,
+      {int prioClass}) async {
     var base64Str = stringToBase64.encode(data) + "\n";
 
-    FcpClientPut put = FcpClientPut(uri, base64Str, priorityClass: 2, dontCompress: true, identifier: identifier, global: true, persistence: Persistence.forever, dataLength: base64Str.length, metaDataContentType: "", realTimeFlag: true, extraInsertsSingleBlock: 0, extraInsertsSplitfileHeaderBlock: 0);
+    FcpClientPut put = FcpClientPut(uri, base64Str, priorityClass: prioClass ?? 2, dontCompress: true, identifier: identifier, global: true, persistence: Persistence.forever, dataLength: base64Str.length, metaDataContentType: "", realTimeFlag: true, extraInsertsSingleBlock: 0, extraInsertsSplitfileHeaderBlock: 0);
 
     _logger.i("Sending message: ${put.toString()}");
 
