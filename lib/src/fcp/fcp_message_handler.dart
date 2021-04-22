@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:free_chat/src/model.dart';
 import 'package:free_chat/src/network/messaging.dart';
 import 'package:free_chat/src/utils/logger.dart';
+import 'package:free_chat/src/utils/toast.dart';
 
 import 'fcp.dart';
 
@@ -45,9 +46,7 @@ class FcpMessageHandler extends ChangeNotifier {
         }
       case 'PutSuccessful':
         {
-          Fluttertoast.showToast(
-              msg: "Upload of one message finished!",
-              toastLength: Toast.LENGTH_LONG);
+          FreeToast.showToast("Upload of one message finished!");
           _identifiers.add(msg.getField('Identifier'));
           _logger.i(msg.toString());
           break;
@@ -70,6 +69,8 @@ class FcpMessageHandler extends ChangeNotifier {
           if(msg.getField("Code") == "28") {
             Future.delayed(const Duration(seconds: 10), () => _fcpConnection.sendFcpMessage(FcpClientGet(identifierToUri[msg.getField("Identifier")],identifier: msg.getField("Identifier"), global: true, persistence: Persistence.forever, realTimeFlag: true)));
           }
+          _fcpConnection.sendFcpMessage(FcpRemoveRequest(msg.getField("Identifier"), global: true));
+
           break;
         }
       case 'AllData':
@@ -78,9 +79,7 @@ class FcpMessageHandler extends ChangeNotifier {
             return;
           _allData.add(msg.data);
           if (msg.getField("Identifier").contains("-chat")) {
-            Fluttertoast.showToast(
-                msg: "New message has arrived!",
-                toastLength: Toast.LENGTH_LONG);
+            FreeToast.showToast("New message has arrived!");
             _messaging.updateChat(
                 msg, identifierToUri[msg.getField("Identifier")]);
           }
@@ -100,6 +99,7 @@ class FcpMessageHandler extends ChangeNotifier {
       case 'ProtocolError':
         {
           _logger.e(msg.toString());
+          if(msg.getField("Code") == "15") _fcpConnection.sendFcpMessage(FcpRemoveRequest(msg.getField("Identifier"), global: true));
           break;
         }
       case 'SimpleProgress':

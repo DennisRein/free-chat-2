@@ -9,6 +9,7 @@
 .history
 .svn/
 
+
 # IntelliJ related
 *.iml
 *.ipr
@@ -44,3 +45,4 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+/linux

@@ -33,6 +33,9 @@ class _HomeJoinState extends State<HomeJoin> {
     currentContext = context;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.check
+        ),
         onPressed: () => Navigator.pop(context, myController.text),
       ),
       body: Column(
@@ -40,9 +43,15 @@ class _HomeJoinState extends State<HomeJoin> {
           Expanded(
             flex: 5,
            //child: Text("Holder"),
-           child: QRView(
+           child: Platform.isAndroid || Platform.isIOS ? QRView(
               key: qrKey,
               onQRViewCreated: _onQRViewCreated,
+            ) : Column(
+             crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(child: Text("QR not supported on browser just paste the code into the textbox at the bottom and press the next button")),
+              ],
             ),
           ),
           Expanded(
@@ -50,6 +59,9 @@ class _HomeJoinState extends State<HomeJoin> {
             child: Center(
               child: TextField(
                 controller: myController,
+                decoration: InputDecoration(
+                  hintText: "Paste code here"
+                ),
               )
             ),
           )

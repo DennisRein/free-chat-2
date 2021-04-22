@@ -62,8 +62,14 @@ class HomeController {
       context,
       MaterialPageRoute(builder: (context) => HomeJoin()),
     );
+    var initialInvite;
 
-    var initialInvite = InitialInvite.fromBase64(i);
+    try {
+      initialInvite = InitialInvite.fromBase64(i);
+    }
+    catch(e) {
+      return null;
+    }
 
     String identifier1 = Uuid().v4();
     String identifier2 = Uuid().v4();

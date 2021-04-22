@@ -17,3 +17,5 @@ export 'package:free_chat/src/fcp/model/send/fcp_client_put.dart';
 export 'package:free_chat/src/fcp/model/send/fcp_get_request_status.dart';
 
 export 'package:free_chat/src/fcp/model/send/fcp_subscribe_usk.dart';
+
+export 'package:free_chat/src/fcp/model/send/fcp_remove_request.dart';
