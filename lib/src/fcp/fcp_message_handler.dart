@@ -48,6 +48,7 @@ class FcpMessageHandler extends ChangeNotifier {
         {
           FreeToast.showToast("Upload of one message finished!");
           _identifiers.add(msg.getField('Identifier'));
+          _logger.i(msg.toString());
           break;
         }
       case 'PutFailed':
@@ -69,6 +70,7 @@ class FcpMessageHandler extends ChangeNotifier {
           }
           _fcpConnection.sendFcpMessage(FcpRemoveRequest(msg.getField("Identifier"), global: true));
           _logger.e(msg.toString());
+
           break;
         }
       case 'AllData':

@@ -32,10 +32,15 @@ class HomeInviteController {
 
     LoadingPopup.build(context, "Joining Chatroom this can take up to a couple minutes");
 
-    await _invite.inviteAccepted(invite);
-
-    Navigator.pop(context);
-    Navigator.pop(context);
+    if(await _invite.inviteAccepted(invite)) {
+      Navigator.pop(context);
+      Navigator.pop(context);
+    }
+    else {
+      Navigator.pop(context);
+      Navigator.pop(context);
+      ErrorPopup.build(context, "An error occured while trying to join the chat room, please try again later");
+    }
 
   }
 
