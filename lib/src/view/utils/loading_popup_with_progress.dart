@@ -30,7 +30,7 @@ class _LoadingPopupWithProgressState extends State<LoadingPopupWithProgress> {
       int total = 0;
       int successful = 0;
       for(var prog in FcpMessageHandler().progress.keys) {
-        if(!(widget.identifiersToListenTo.contains(prog) || widget.identifiersToListenTo.contains(prog + "-handshake-0") || widget.identifiersToListenTo.contains(prog + "-handshake-1") || widget.identifiersToListenTo.contains(prog + "-handshake-2")))
+        if(!widget.identifiersToListenTo.contains(prog))
           continue;
         total = total + int.parse(FcpMessageHandler().progress[prog]["Total"]);
         successful = successful + int.parse(FcpMessageHandler().progress[prog]["Succeeded"]);

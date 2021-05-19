@@ -60,7 +60,6 @@ class FcpMessageHandler extends ChangeNotifier {
       case 'GetFailed':
         {
           _logger.i(msg.getField("Code"));
-          _logger.e(msg.toString());
           if(msg.getField("Code") == "27") {
             _logger.i("Redirecting to new url");
             FcpClientGet clientGet = FcpClientGet(msg.getField("RedirectURI"), identifier: msg.getField("Identifier"), global: true, persistence: Persistence.forever, realTimeFlag: true);
@@ -71,6 +70,7 @@ class FcpMessageHandler extends ChangeNotifier {
           }
           //_fcpConnection.sendFcpMessage(FcpRemoveRequest(msg.getField("Identifier"), global: true));
 
+          _logger.e(msg.toString() + identifierToUri[msg.getField("Identifier")]);
           break;
         }
       case 'AllData':
@@ -112,7 +112,7 @@ class FcpMessageHandler extends ChangeNotifier {
           if(_allData.contains(ident) || _identifiers.contains(ident)) {
             break;
           }
-          //Future.delayed(const Duration(seconds: 10), () => _fcpConnection.sendFcpMessage(FcpGetRequestStatus(ident, global: true)));
+          Future.delayed(const Duration(seconds: 10), () => _fcpConnection.sendFcpMessage(FcpGetRequestStatus(ident, global: true)));
           notifyListeners();
           break;
         }
