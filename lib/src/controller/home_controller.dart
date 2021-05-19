@@ -62,7 +62,7 @@ class HomeController {
       context,
       MaterialPageRoute(builder: (context) => HomeJoin()),
     );
-    var initialInvite;
+    InitialInvite initialInvite;
 
     try {
       initialInvite = InitialInvite.fromBase64(i);
@@ -77,8 +77,15 @@ class HomeController {
 
     LoadingPopupWithProgressCall.build(context, "Joining chat with ${initialInvite.getName()} this can take up to a couple minutes", [identifier1, identifier2, identifier3]);
 
-    if(await Invite().handleInvitation(initialInvite, identifier1, identifier2, identifier3))
+    var invitationResponse = await Invite().handleInvitation(initialInvite, identifier1, identifier2, identifier3);
+    //var invitationResponse = InitialInviteResponse("test", "test");
+
+    _logger.i(invitationResponse.toString());
+
+    if(invitationResponse != null) {
       Navigator.pop(context);
+      HomeJoinPopup.build(context, invitationResponse);
+    }
     else {
       Navigator.pop(context);
       ErrorPopup.build(context, "An error occured while trying to join the chat room, please try again later");
@@ -98,36 +105,4 @@ class HomeController {
     return text;
 
   }
-
-
 }
-
-/*
-    Chat chat = Chat("asd", "asd", "asd", [], "karl");
-
-    ChatDTO dto = ChatDTO.fromChat(chat);
-
-    //dto = await _databaseHandler.upsertChat(ChatDTO.fromChat(chat));
-
-    dto = await _databaseHandler.fetchChatByRequestUri("asd");
-
-    _logger.i(dto.id.toString());
-
-    var timestamp = formatDate(DateTime.now(), [dd, '/', mm, '/', yyyy, ' ', HH, ':', nn]);
-
-    Message msg = Message("hallo" , timestamp, "Test");
-    Message msg1 = Message("hallo" , timestamp, "Test2");
-    MessageDTO messageDTO = MessageDTO.fromMessage(msg);
-    MessageDTO messageDTO2 = MessageDTO.fromMessage(msg1);
-
-    messageDTO.chatId = dto.id;
-    messageDTO2.chatId = dto.id;
-
-    MessageDTO mDto = await _databaseHandler.upsertMessage(messageDTO);
-    await _databaseHandler.upsertMessage(messageDTO);
-    await _databaseHandler.upsertMessage(messageDTO2);
-    await _databaseHandler.upsertMessage(messageDTO2);
-    Chat chatfetch = await _databaseHandler.fetchChatAndMessages(dto.id);
-    _logger.i((await _databaseHandler.fetchAllChats()).toString());
-
- */

@@ -62,7 +62,7 @@ class Messaging extends ChangeNotifier {
     for(Message msg in newChat.messages) {
       bool flag = false;
       for(Message msg2 in oldChat.messages) {
-        if(msg.message == msg2.message && msg.getTimestamp() == msg2.getTimestamp()) {
+        if(msg.message == msg2.message && msg.getTimestamp() == msg2.getTimestamp() && msg.sender == msg2.sender) {
           flag = true;
           break;
         }

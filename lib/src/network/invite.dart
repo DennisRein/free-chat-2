@@ -58,12 +58,12 @@ class Invite {
 
     _logger.i("Created Initial chat: $chat");
 
-    _networking.sendMessage(_insertUri, chat.toString(), identifier);
+    await _networking.sendMessage(_insertUri, chat.toString(), identifier);
 
     return initialInvite;
   }
 
-  Future<bool> handleInvitation(InitialInvite initialInvite, String identifierHandshake, String identifierInsert, String identifierRequest) async {
+  Future<InitialInviteResponse> handleInvitation(InitialInvite initialInvite, String identifierHandshake, String identifierInsert, String identifierRequest) async {
     var _sskKey = await _networking.getKeys();
 
     var _insertUri = _sskKey.getAsUskInsertUri() + "chat/0/";
@@ -81,28 +81,14 @@ class Invite {
 
     try {
       await Future.wait([
-        _networking.sendMessage(
-            initialInvite.getHandshakeUri(), initialInviteResponse.toString(),
-            identifierHandshake),
-        _networking.sendMessage(_insertUri, chat.toString(), identifierInsert)
-
+        _networking.sendMessage(_insertUri, chat.toString(), identifierInsert),
+        _networking.getMessage(initialInvite.getRequestUri(), identifierRequest)
       ]);
     }
     catch(e) {
       _logger.e("Upload failed");
-      return false;
+      return null;
     }
-    FcpMessage fcpChat;
-    try {
-     fcpChat = await _networking.getMessage(initialInvite.getRequestUri(), identifierRequest);
-
-    }
-    catch(e) {
-      _logger.e(e.toString());
-      return false;
-    }
-    _logger.i(fcpChat.toString());
-
 
     FcpSubscribeUSK fcpSubscribeUSK = FcpSubscribeUSK(initialInvite.getRequestUri(), Uuid().v4());
 
@@ -113,15 +99,13 @@ class Invite {
     _logger.i("dto => $dto");
 
     await _databaseHandler.upsertChat(dto);
-    return true;
+    return initialInviteResponse;
   }
 
-  Future<bool> inviteAccepted(InitialInvite initialInvite) async {
-    FcpMessage handshakeMessage;
+  Future<bool> inviteAccepted(InitialInvite initialInvite, InitialInviteResponse response) async {
     FcpMessage fcpChat;
 
     try {
-      handshakeMessage = await _networking.getMessage(initialInvite.getHandshakeUri(), Uuid().v4());
       fcpChat = await _networking.getMessage(initialInvite.getRequestUri(), Uuid().v4());
     }
     catch(e) {
@@ -131,11 +115,6 @@ class Invite {
 
     _logger.i(fcpChat.toString());
 
-    _logger.i("HandshakeMessage: ${handshakeMessage.toString()}");
-
-    String cleanedData = handshakeMessage.data.split("}")[0] + "}";
-
-    InitialInviteResponse response = InitialInviteResponse.fromJson(jsonDecode(cleanedData));
 
     ChatDTO chatDTO = ChatDTO();
     chatDTO.insertUri = initialInvite.insertUri;

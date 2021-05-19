@@ -17,3 +17,5 @@ export 'package:free_chat/src/view/chats/chats_detail.dart';
 export 'package:free_chat/src/view/home/home_name_popup.dart';
 
 export 'package:free_chat/src/view/utils/error_popup.dart';
+
+export 'package:free_chat/src/view/home/home_join_popup.dart';

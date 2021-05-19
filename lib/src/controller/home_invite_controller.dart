@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:free_chat/src/fcp/fcp.dart';
@@ -30,9 +31,17 @@ class HomeInviteController {
 
   Future<void> inviteAccepted(InitialInvite invite, BuildContext context) async {
 
+    var i = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => HomeJoin()),
+    );
+
+    _logger.i(i);
+
+
     LoadingPopup.build(context, "Joining Chatroom this can take up to a couple minutes");
 
-    if(await _invite.inviteAccepted(invite)) {
+    if(await _invite.inviteAccepted(invite, InitialInviteResponse.fromBase64(i))) {
       Navigator.pop(context);
       Navigator.pop(context);
     }

@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:free_chat/src/utils/converter.dart';
+
 class InitialInviteResponse {
   String _requestUri;
   String _name;
@@ -14,6 +18,13 @@ class InitialInviteResponse {
   @override
   String toString() {
     return '{"requestUri": "$_requestUri", "name": "$_name"}';
+  }
+
+  String toBase64() {
+    return Converter.stringToBase64.encode(toString());
+  }
+  factory InitialInviteResponse.fromBase64(String base64) {
+    return InitialInviteResponse.fromJson(jsonDecode(Converter.stringToBase64.decode(base64)));
   }
 
 }
